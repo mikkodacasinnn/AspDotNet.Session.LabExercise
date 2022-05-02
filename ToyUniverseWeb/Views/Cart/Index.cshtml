@@ -1,0 +1,46 @@
+﻿@using ToyUniverseData.Models
+@using ToyUniverseWeb.Extensions
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewBag.Title = "Cart";
+}
+@{
+    List<ShoppingCart> cart = Context.Session.GetObject<List<ShoppingCart>>("cart");
+    var total = cart.Sum(item => item.CToy.MToyRate * item.SiQty);
+}
+
+@if(cart.Count() != 0)
+{
+<h3>Cart Page</h3>
+<div>
+        @foreach (ShoppingCart item in @Context.Session.GetObject<List<ShoppingCart>>("cart"))
+        {
+            <div style="display:flex;
+                        flex-wrap:nowrap;
+                        width:100%;
+                        text-align:center;
+                        box-shadow: rgb(31, 21, 21) 0px 2px 4px 0px, rgb(31, 21, 21) 0px 2px 16px 0px;
+                        padding: 20px 20px;
+                        text-decoration: none;
+                        color: black;
+                        align-items: flex-start;
+                        justify-content: space-between;
+                        margin-bottom: 20px;
+                        position: relative;
+                        border-radius: 7px;
+                        border: 1px solid black;">
+                <div style="padding: 0px 40px;">@item.CToy.CToyId</div>
+                <div style="padding: 0px 40px;">@item.CToy.VToyName</div>
+                <div style="padding: 0px 40px;>@item.CToy.VToyDescription</div>
+                <div style="padding: 0px 40px;">@item.CToy.MToyRate</div>
+                <div style="padding: 0px 40px;">@item.SiQty</div>
+                <div style="padding: 0px 40px;">@(@item.CToy.MToyRate * @item.SiQty)</div>
+                <div style="padding: 0px 40px;"><a href="@Url.Action("Remove", "Cart", new { id = item.CToy.CToyId })">Remove</a></div>
+            </div>
+        }
+</div>
+}else{
+    <h3>Oh no! Your cart is empty.</h3>
+}
+<h2><a href="@Url.Action("Index", "Toy")">Click to continue the joy in the Toy Universe!</a></h2>
